@@ -30,12 +30,11 @@ data_test = test.iloc[:, 1:39]
 data_test = data_test.apply(np.float32)
 data_test = data_test.apply(norm_to_gauss)
 
-import sklearn
-from sklearn.impute import MICEImputer
-scaler = MICEImputer(n_imputations=10)
-scaler.fit(data)
-data = scaler.transform(data)
-data_test = scaler.transform(data_test)
+
+from fancyimpute import MICE
+data = MICE(n_imputations=10).complete(data)
+if data_test.isnull().any().any():
+    data_test = MICE(n_imputations=10).complete(data_test)
 
 
 def argmax(preds):
